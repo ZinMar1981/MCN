@@ -1,0 +1,2 @@
+
+console.log("Feature 2 loaded successfully.");
