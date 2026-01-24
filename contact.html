@@ -48,5 +48,71 @@
         <p>© 2026 Mandalay Certified Net. All Rights Reserved.</p>
     </div>
 </footer>
+
+        <script>
+            (function(){
+                const slider = document.querySelector('.hero-slider');
+                if(!slider) return;
+                const slides = Array.from(slider.querySelectorAll('.slide'));
+                let idx = slides.findIndex(s => s.classList.contains('current'));
+                if(idx < 0) idx = 0;
+                slides.forEach((s,i)=> s.setAttribute('aria-hidden', i===idx ? 'false' : 'true'));
+
+                // build dots
+                const dots = document.createElement('div');
+                dots.className = 'hero-dots';
+                slides.forEach((_, i) => {
+                    const btn = document.createElement('button');
+                    if(i === idx) btn.classList.add('active');
+                    btn.addEventListener('click', () => goTo(i));
+                    dots.appendChild(btn);
+                });
+                slider.appendChild(dots);
+
+                function goTo(i){
+                    slides[idx].classList.remove('current');
+                    slides[idx].setAttribute('aria-hidden','true');
+                    dots.children[idx].classList.remove('active');
+                    idx = (i + slides.length) % slides.length;
+                    slides[idx].classList.add('current');
+                    slides[idx].setAttribute('aria-hidden','false');
+                    dots.children[idx].classList.add('active');
+                }
+
+                let timer = setInterval(()=> goTo(idx+1), 5500);
+                slider.addEventListener('mouseenter', ()=> clearInterval(timer));
+                slider.addEventListener('mouseleave', ()=> timer = setInterval(()=> goTo(idx+1), 5500));
+            })();
+        </script>
+        <script>
+        (function(){
+            const dropBtn = document.querySelector('.dropbtn');
+            const dropdown = document.querySelector('.dropdown');
+            if(!dropBtn || !dropdown) return;
+        
+            dropBtn.addEventListener('click', function(e){
+                e.stopPropagation();
+                const isOpen = dropdown.classList.toggle('open');
+                this.setAttribute('aria-expanded', String(isOpen));
+            });
+        
+            // Close when clicking outside
+            document.addEventListener('click', function(e){
+                if(!dropdown.contains(e.target)){
+                    dropdown.classList.remove('open');
+                    dropBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        
+            // Close on Escape
+            document.addEventListener('keydown', function(e){
+                if(e.key === 'Escape'){
+                    dropdown.classList.remove('open');
+                    dropBtn.setAttribute('aria-expanded', 'false');
+                    dropBtn.focus();
+                }
+            });
+        })();
+        </script>
 </body>
 </html>
